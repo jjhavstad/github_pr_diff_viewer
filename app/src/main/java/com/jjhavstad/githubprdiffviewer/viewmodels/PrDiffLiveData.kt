@@ -5,30 +5,28 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jjhavstad.githubprdiffviewer.datasources.apis.PrApiDataSource
-import com.jjhavstad.githubprdiffviewer.models.Pr
 import com.jjhavstad.githubprdiffviewer.models.PrDiff
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PrViewModel(
+class PrDiffLiveData(
     private val prApiDataSource: PrApiDataSource
 ) : ViewModel() {
-    private val _prLiveData: MutableLiveData<List<Pr>> = MutableLiveData()
-    val prLiveData: LiveData<List<Pr>>
-        get() = _prLiveData
+    private val _prDiffLiveData: MutableLiveData<PrDiff> = MutableLiveData()
+    val prDiffLiveData: LiveData<PrDiff>
+        get() = _prDiffLiveData
+    private val _prDiffErrorLiveData: MutableLiveData<Unit> = MutableLiveData()
+    val prDiffErrorLiveData: LiveData<Unit>
+        get() = _prDiffErrorLiveData
 
-    private val _prErrorLiveData: MutableLiveData<Unit> = MutableLiveData()
-    val prErrorLiveData: LiveData<Unit>
-        get() = _prErrorLiveData
-
-    fun requestPrs(path: String) {
+    fun requestPrDiffs(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                prApiDataSource.requestAllPrs(path)?.let { _prs ->
-                    _prLiveData.postValue(_prs)
+                prApiDataSource.requestFileDiffs(path)?.let { _prDiff ->
+                    _prDiffLiveData.postValue(_prDiff)
                 }
             } catch (e: Exception) {
-                _prErrorLiveData.postValue(Unit)
+                _prDiffErrorLiveData.postValue(Unit)
             }
         }
     }
