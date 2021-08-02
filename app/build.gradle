@@ -33,6 +33,12 @@ android {
     buildFeatures {
         viewBinding true
     }
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -48,6 +54,11 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_fragment_ktx_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_ui_ktx_version"
     testImplementation "junit:junit:$junit_version"
+    testImplementation "io.kotest:kotest-runner-junit5:$kotest_version"
+    testImplementation "io.kotest:kotest-property:$kotest_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
+    testImplementation "org.json:json:$json_version"
     androidTestImplementation "androidx.test.ext:junit:$androidx_ext_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }
