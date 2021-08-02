@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jjhavstad.githubprdiffviewer.databinding.FragmentPrDetailBinding
 import com.jjhavstad.githubprdiffviewer.databinding.PrDetailContentBinding
+import com.jjhavstad.githubprdiffviewer.ext.applyBackgroundColorToRegion
 import com.jjhavstad.githubprdiffviewer.models.PrDiffSplit
 import com.jjhavstad.githubprdiffviewer.util.PrDiffSplitParser
 import com.jjhavstad.githubprdiffviewer.viewmodels.PrDiffViewModel
@@ -99,8 +101,16 @@ class PrDetailFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             getItem(position)?.let { item ->
-                holder.addLines.text = item.add
-                holder.deleteLines.text = item.remove
+                holder.addLines.text = item.add.applyBackgroundColorToRegion(
+                    ContextCompat.getColor(holder.addLines.context, android.R.color.holo_green_light),
+                    '+',
+                    '\n'
+                )
+                holder.deleteLines.text = item.remove.applyBackgroundColorToRegion(
+                    ContextCompat.getColor(holder.deleteLines.context, android.R.color.holo_red_light),
+                    '-',
+                    '\n'
+                )
             }
         }
 
