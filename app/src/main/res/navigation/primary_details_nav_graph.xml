@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/item_list_fragment"
         android:name="com.jjhavstad.githubprdiffviewer.PrListFragment"
-        android:label="ItemListFragment">
+        android:label="GitHub Open PRs for JetBrains/intellij-kotlin">
         <action
             android:id="@+id/show_item_detail"
             app:destination="@id/item_detail_fragment" />
@@ -16,10 +16,10 @@
     <fragment
         android:id="@+id/item_detail_fragment"
         android:name="com.jjhavstad.githubprdiffviewer.PrDetailFragment"
-        android:label="item_detail"
+        android:label="{item_title}"
         tools:layout="@layout/fragment_pr_detail">
         <argument
-            android:name="item_id"
+            android:name="item_title"
             android:defaultValue=""
             app:argType="string" />
     </fragment>
