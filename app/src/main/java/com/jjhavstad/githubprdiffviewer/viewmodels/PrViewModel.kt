@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jjhavstad.githubprdiffviewer.datasources.apis.PrApiDataSource
 import com.jjhavstad.githubprdiffviewer.models.Pr
-import com.jjhavstad.githubprdiffviewer.models.PrDiff
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
