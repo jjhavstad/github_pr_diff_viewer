@@ -9,7 +9,7 @@ import com.jjhavstad.githubprdiffviewer.models.PrDiff
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PrDiffLiveData(
+class PrDiffViewModel(
     private val prApiDataSource: PrApiDataSource
 ) : ViewModel() {
     private val _prDiffLiveData: MutableLiveData<PrDiff> = MutableLiveData()
