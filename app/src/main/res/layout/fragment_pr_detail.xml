@@ -35,11 +35,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/item_detail"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:name="com.jjhavstad.githubprdiffviewer.ItemDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.jjhavstad.githubprdiffviewer.PrDetailHostActivity"
         tools:listitem="@layout/pr_detail_content" />
