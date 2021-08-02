@@ -11,11 +11,12 @@ import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jjhavstad.githubprdiffviewer.databinding.FragmentPrListBinding
 import com.jjhavstad.githubprdiffviewer.databinding.PrListContentBinding
-import com.jjhavstad.githubprdiffviewer.placeholder.PlaceholderContent;
-
+import com.jjhavstad.githubprdiffviewer.models.Pr
 
 /**
  * A Fragment representing a list of Pings. This fragment
@@ -85,11 +86,15 @@ class PrListFragment : Fragment() {
          * a single pane layout or two pane layout
          */
         val onClickListener = View.OnClickListener { itemView ->
-            val item = itemView.tag as PlaceholderContent.PlaceholderItem
+            val item = itemView.tag as Pr
             val bundle = Bundle()
             bundle.putString(
-                PrDetailFragment.ARG_ITEM_ID,
-                item.id
+                PrDetailFragment.ARG_ITEM_TITLE,
+                item.title
+            )
+            bundle.putString(
+                PrDetailFragment.ARG_ITEM_DIFF_URL,
+                item.diffUrl
             )
             if (itemDetailFragmentContainer != null) {
                 itemDetailFragmentContainer.findNavController()
@@ -105,10 +110,10 @@ class PrListFragment : Fragment() {
          * experience on larger screen devices
          */
         val onContextClickListener = View.OnContextClickListener { v ->
-            val item = v.tag as PlaceholderContent.PlaceholderItem
+            val item = v.tag as Pr
             Toast.makeText(
                 v.context,
-                "Context click of item " + item.id,
+                "Context click of item " + item.title,
                 Toast.LENGTH_LONG
             ).show()
             true
@@ -122,22 +127,18 @@ class PrListFragment : Fragment() {
         onContextClickListener: View.OnContextClickListener
     ) {
 
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(
-            PlaceholderContent.ITEMS,
+        recyclerView.adapter = PrListRecyclerViewAdapter(
             onClickListener,
             onContextClickListener
         )
     }
 
-    class SimpleItemRecyclerViewAdapter(
-        private val values: List<PlaceholderContent.PlaceholderItem>,
+    class PrListRecyclerViewAdapter(
         private val onClickListener: View.OnClickListener,
         private val onContextClickListener: View.OnContextClickListener
-    ) :
-        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+    ) : ListAdapter<Pr, PrListRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
             val binding =
                 PrListContentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return ViewHolder(binding)
@@ -145,27 +146,35 @@ class PrListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = values[position]
-            holder.idView.text = item.id
-            holder.contentView.text = item.content
+            getItem(position)?.let { item ->
+                holder.contentView.text = item.title
 
-            with(holder.itemView) {
-                tag = item
-                setOnClickListener(onClickListener)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    setOnContextClickListener(onContextClickListener)
+                with(holder.itemView) {
+                    tag = item
+                    setOnClickListener(onClickListener)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        setOnContextClickListener(onContextClickListener)
+                    }
                 }
             }
         }
 
-        override fun getItemCount() = values.size
-
         inner class ViewHolder(binding: PrListContentBinding) :
             RecyclerView.ViewHolder(binding.root) {
-            val idView: TextView = binding.idText
             val contentView: TextView = binding.content
         }
 
+        companion object {
+            val DIFF_CALLBACK = object: DiffUtil.ItemCallback<Pr>() {
+                override fun areItemsTheSame(oldItem: Pr, newItem: Pr): Boolean {
+                    return oldItem.id == newItem.id
+                }
+
+                override fun areContentsTheSame(oldItem: Pr, newItem: Pr): Boolean {
+                    return oldItem.equals(newItem)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
