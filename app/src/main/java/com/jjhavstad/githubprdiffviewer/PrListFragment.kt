@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jjhavstad.githubprdiffviewer.databinding.FragmentPrListBinding
 import com.jjhavstad.githubprdiffviewer.databinding.PrListContentBinding
 import com.jjhavstad.githubprdiffviewer.models.Pr
+import com.jjhavstad.githubprdiffviewer.viewmodels.PrViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.ref.WeakReference
 
 /**
  * A Fragment representing a list of Pings. This fragment
@@ -28,6 +31,9 @@ import com.jjhavstad.githubprdiffviewer.models.Pr
  */
 
 class PrListFragment : Fragment() {
+    private val prViewModel: PrViewModel by viewModel()
+
+    private val weakThis: WeakReference<PrListFragment> = WeakReference(this)
 
     /**
      * Method to intercept global key events in the
@@ -61,10 +67,20 @@ class PrListFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        prViewModel.prLiveData.observe(this) {
+            weakThis.get()?.apply {
+                (binding.itemList.adapter as PrListRecyclerViewAdapter).submitList(it)
+            }
+        }
+        prViewModel.requestPrs(GITHUB_PR_URL)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentPrListBinding.inflate(inflater, container, false)
         return binding.root
@@ -180,5 +196,9 @@ class PrListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val GITHUB_PR_URL = "https://api.github.com/repos/JetBrains/intellij-kotlin/pulls"
     }
 }

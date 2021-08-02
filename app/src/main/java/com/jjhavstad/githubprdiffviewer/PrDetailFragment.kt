@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jjhavstad.githubprdiffviewer.databinding.FragmentPrDetailBinding
 import com.jjhavstad.githubprdiffviewer.databinding.PrDetailContentBinding
 import com.jjhavstad.githubprdiffviewer.models.PrDiffSplit
+import com.jjhavstad.githubprdiffviewer.util.PrDiffSplitParser
+import com.jjhavstad.githubprdiffviewer.viewmodels.PrDiffViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.ref.WeakReference
 
 /**
  * A fragment representing a single Item detail screen.
@@ -21,6 +25,11 @@ import com.jjhavstad.githubprdiffviewer.models.PrDiffSplit
  * on handsets.
  */
 class PrDetailFragment : Fragment() {
+    private val prDiffViewModel: PrDiffViewModel by viewModel()
+
+    private val weakThis: WeakReference<PrDetailFragment> = WeakReference(this)
+
+    private val prDiffSplitParser = PrDiffSplitParser()
 
     private var _binding: FragmentPrDetailBinding? = null
 
@@ -41,6 +50,19 @@ class PrDetailFragment : Fragment() {
             if (it.containsKey(ARG_ITEM_DIFF_URL)) {
                 prDiffUrl = it.getString(ARG_ITEM_DIFF_URL)
             }
+        }
+
+        prDiffViewModel.prDiffLiveData.observe(this) {
+            weakThis.get()?.apply {
+                it?.let {
+                    ((binding.itemDetail as RecyclerView).adapter as PrDetailRecyclerViewAdapter).submitList(
+                        prDiffSplitParser.loadAndParse(it).prSplits
+                    )
+                }
+            }
+        }
+        prDiffUrl?.let {
+            prDiffViewModel.requestPrDiffs(it)
         }
     }
 
