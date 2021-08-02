@@ -1,5 +1,5 @@
 package com.jjhavstad.githubprdiffviewer.util
 
-interface ApiResponseParser<T> {
-    fun loadAndParse(input: String): T
+interface ApiResponseParser<in I, out T> {
+    fun loadAndParse(input: I): T
 }

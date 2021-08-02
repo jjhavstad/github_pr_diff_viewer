@@ -3,7 +3,7 @@ package com.jjhavstad.githubprdiffviewer.util
 import com.jjhavstad.githubprdiffviewer.models.Pr
 import org.json.JSONArray
 
-class PrResponseParser : ApiResponseParser<List<Pr>> {
+class PrResponseParser : ApiResponseParser<String, List<Pr>> {
     override fun loadAndParse(input: String): List<Pr> {
         return mutableListOf<Pr>().also { _prList ->
             val prArray = JSONArray(input)

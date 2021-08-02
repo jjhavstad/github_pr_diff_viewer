@@ -1,0 +1,10 @@
+diff --git SomeFile.txt
+this is the 1st line
++this is a line that has been added
++this is another line that has been added
+-and this is a line that has been deleted
+this is just another line
++this is yet another line that's being added
+-but this line is being removed
+-and so is this line
+and this is the last line
