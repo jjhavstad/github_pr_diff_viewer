@@ -1,16 +1,19 @@
 <!-- Adding the same root's ID for view binding as other layout configurations -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/item_detail"
-        style="?android:attr/textAppearanceLarge"
+        android:name="com.jjhavstad.githubprdiffviewer.ItemDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        tools:context="com.jjhavstad.githubprdiffviewer.PrDetailFragment" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.jjhavstad.githubprdiffviewer.PrDetailHostActivity"
+        tools:listitem="@layout/pr_detail_content" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
