@@ -7,8 +7,8 @@ import kotlin.jvm.Throws
 
 interface PrApiDataSource {
     @Throws(Exception::class)
-    fun requestAllPrs(path: String): List<Pr>?
+    fun requestAllPrs(url: String): List<Pr>?
 
     @Throws(Exception::class)
-    fun requestFileDiffs(prPath: String): PrDiff?
+    fun requestFileDiffs(url: String): PrDiff?
 }
