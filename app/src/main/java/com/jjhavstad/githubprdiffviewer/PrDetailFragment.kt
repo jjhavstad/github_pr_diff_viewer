@@ -31,8 +31,6 @@ class PrDetailFragment : Fragment() {
 
     private val weakThis: WeakReference<PrDetailFragment> = WeakReference(this)
 
-    private val prDiffSplitParser = PrDiffSplitParser()
-
     private var _binding: FragmentPrDetailBinding? = null
 
     // This property is only valid between onCreateView and
@@ -54,17 +52,17 @@ class PrDetailFragment : Fragment() {
             }
         }
 
-        prDiffViewModel.prDiffLiveData.observe(this) {
+        prDiffViewModel.prDiffSplitLiveData.observe(this) {
             weakThis.get()?.apply {
                 it?.let {
                     ((binding.itemDetail as RecyclerView).adapter as PrDetailRecyclerViewAdapter).submitList(
-                        prDiffSplitParser.loadAndParse(it).prSplits
+                        it.prSplits
                     )
                 }
             }
         }
         prDiffUrl?.let {
-            prDiffViewModel.requestPrDiffs(it)
+            prDiffViewModel.requestPrDiffSplits(it)
         }
     }
 
